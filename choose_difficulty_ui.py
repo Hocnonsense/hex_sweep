@@ -10,24 +10,28 @@ from typing import TYPE_CHECKING, Callable
 
 from hexgrid import HexGrid
 from hexgrid_ui_utilities import HexGridUIUtilities
+
 if TYPE_CHECKING:
-    from game_ui import GameUI # pylint: disable=cyclic-import
+    from game_ui import GameUI  # pylint: disable=cyclic-import
+
 
 class ChooseDifficultyView:
     """
     This class purely represents the view of the "Choose Difficulty"
     window. It helps separate the controls from the logic code.
     """
+
     def __init__(
-            self,
-            update_slider_range: Callable[[Event], None],
-            draw_field: Callable[[Event], None]) -> None:
+        self,
+        update_slider_range: Callable[[Event], None],
+        draw_field: Callable[[Event], None],
+    ) -> None:
         # programs can only have one window, but can
         # create multiple "Toplevel"s (effectively new windows)
         self.window = Toplevel()
-        self.window.title('HexSweeper - Choose Difficulty')
-        self.window.geometry('400x473')
-        self.window.bind('<Configure>', draw_field)
+        self.window.title("HexSweeper - Choose Difficulty")
+        self.window.geometry("400x473")
+        self.window.bind("<Configure>", draw_field)
 
         # these statements allow the hexgrid (in col 1, row 3)
         # to stretch as the window is resized
@@ -37,8 +41,7 @@ class ChooseDifficultyView:
         # stretch the fourth row vertically:
         Grid.rowconfigure(self.window, 3, weight=1)
 
-        Label(self.window, text='Board Size:').grid(
-            row=0, column=0, sticky=W)
+        Label(self.window, text="Board Size:").grid(row=0, column=0, sticky=W)
 
         # TkInter "Scale" objects are sliders
         # Default slider resolution/accuracy is 1
@@ -48,47 +51,45 @@ class ChooseDifficultyView:
             from_=2,
             to=15,
             orient=HORIZONTAL,
-            command=update_slider_range
+            command=update_slider_range,
         )
         self.game_size_slider.grid(row=0, column=1, sticky=E + W)
 
-        Label(self.window, text='Number of mines:') \
-            .grid(row=1, column=0, sticky=W)
+        Label(self.window, text="Number of mines:").grid(row=1, column=0, sticky=W)
         self.mine_count_slider = Scale(
-            self.window,
-            from_=1,
-            to=315,
-            orient=HORIZONTAL,
-            command=draw_field
+            self.window, from_=1, to=315, orient=HORIZONTAL, command=draw_field
         )
         self.mine_count_slider.grid(row=1, column=1, sticky=E + W)
 
-        self.canvas = Canvas(self.window, bg='white')
+        self.canvas = Canvas(self.window, bg="white")
         self.canvas.grid(
             row=3,
             column=0,
             # span columns 0 and 1
             columnspan=2,
             # resize with the window
-            sticky=E + N + W + S)
+            sticky=E + N + W + S,
+        )
 
     def close_window(self):
-        """ Close the difficulty selection window """
+        """Close the difficulty selection window"""
         self.window.destroy()
 
     def set_mine_count_slider_upper_bound(self, upper_bound):
-        """ Set the upper bound of the mine count slider """
+        """Set the upper bound of the mine count slider"""
         self.mine_count_slider.config(to=upper_bound)
+
 
 class ChooseDifficultyUI:
     """
     This class represents the window used to choose a
     custom game difficulty.
     """
-    def __init__(self, game_ui: 'GameUI') -> None:
+
+    def __init__(self, game_ui: "GameUI") -> None:
         self.view = ChooseDifficultyView(
-            lambda event: self.update_slider_range(),
-            lambda event: self.draw_field())
+            lambda event: self.update_slider_range(), lambda event: self.draw_field()
+        )
         self.canvas = self.view.canvas
         self.game_ui = game_ui
         # initialise these to arbitrary values, as these are
@@ -103,16 +104,14 @@ class ChooseDifficultyUI:
         self.view.game_size_slider.set(self.game_ui.hex_grid.size)
         self.last_size = self.game_ui.hex_grid.size
         self.view.set_mine_count_slider_upper_bound(
-            HexGrid.highest_possible_mine_count_for_size(
-                self.game_ui.hex_grid.size
-            )
+            HexGrid.highest_possible_mine_count_for_size(self.game_ui.hex_grid.size)
         )
         self.view.mine_count_slider.set(self.game_ui.hex_grid.mine_count)
 
         Button(
             self.view.window,
-            text='Select this difficulty',
-            command=self.select_difficulty_clicked
+            text="Select this difficulty",
+            command=self.select_difficulty_clicked,
         ).grid(row=2, column=0, columnspan=2)
 
         self.draw_field()
@@ -125,7 +124,7 @@ class ChooseDifficultyUI:
 
     @staticmethod
     def border() -> int:
-        """ Return fixed border size (on all sides) """
+        """Return fixed border size (on all sides)"""
         return 20
 
     def update_slider_range(self) -> None:
@@ -147,11 +146,10 @@ class ChooseDifficultyUI:
             return
 
         # start by setting up some variables for later
-        last_max_mine_count = \
-            HexGrid.highest_possible_mine_count_for_size(
-                self.last_size)
-        new_max_mine_count = \
-            HexGrid.highest_possible_mine_count_for_size(new_size)
+        last_max_mine_count = HexGrid.highest_possible_mine_count_for_size(
+            self.last_size
+        )
+        new_max_mine_count = HexGrid.highest_possible_mine_count_for_size(new_size)
 
         # update mine count slider upper bound
         self.view.set_mine_count_slider_upper_bound(new_max_mine_count)

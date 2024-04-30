@@ -5,12 +5,12 @@ HexSweeper window and its various UI elements.
 
 from tkinter import Tk, Canvas, Menu, Event, Widget
 from tkinter import messagebox
-from typing import List, Any
 
 from hexgrid import HexGrid
 from choose_difficulty_ui import ChooseDifficultyUI
 from difficulty import Difficulty
 from hexgrid_ui_utilities import HexGridUIUtilities
+
 
 class GameUI:
     """
@@ -19,16 +19,17 @@ class GameUI:
     it initialises Tkinter and it forwards mouse
     events to the HexGrid instance.
     """
+
     def __init__(self, difficulty: Difficulty) -> None:
-        self.window = Tk() # create application window
-        self.window.title('HexSweeper')
+        self.window = Tk()  # create application window
+        self.window.title("HexSweeper")
         # default width & height
-        self.window.geometry(f'{800}x{615}')
-        self.canvas = Canvas(self.window, bg='white')
+        self.window.geometry(f"{800}x{615}")
+        self.canvas = Canvas(self.window, bg="white")
         # fill entire window with canvas
         # "fill='both'" allows the canvas to stretch
         # in both x and y direction
-        self.canvas.pack(expand=1, fill='both')
+        self.canvas.pack(expand=1, fill="both")
 
         # initialized with irrelevant values before
         # it is properly initialised in the start_new_game
@@ -42,14 +43,14 @@ class GameUI:
         self.hshift: float = 0
         self.start_new_game(difficulty)
 
-        self.ui_elements: List[Widget] = [self.canvas]
+        self.ui_elements: list[Widget] = [self.canvas]
 
-        self.canvas.bind('<Button-1>', self.on_click)
+        self.canvas.bind("<Button-1>", self.on_click)
         # both <Button-2> and <Button-3> need to be bound for OS X and
         # Linux support (due to Tkinter compatibility issues)
-        self.canvas.bind('<Button-2>', self.on_secondary_click)
-        self.canvas.bind('<Button-3>', self.on_secondary_click)
-        self.window.bind('<Configure>', self.on_window_resize)
+        self.canvas.bind("<Button-2>", self.on_secondary_click)
+        self.canvas.bind("<Button-3>", self.on_secondary_click)
+        self.window.bind("<Configure>", self.on_window_resize)
 
         self.init_menubar()
 
@@ -66,19 +67,20 @@ class GameUI:
 
         game_menu = Menu(menubar, tearoff=0)
         game_menu.add_command(
-            label='New (Easy)',
-            command=lambda: self.start_new_game(Difficulty.EASY))
+            label="New (Easy)", command=lambda: self.start_new_game(Difficulty.EASY)
+        )
         game_menu.add_command(
-            label='New (Intermediate)',
-            command=lambda: self.start_new_game(
-                Difficulty.INTERMEDIATE))
+            label="New (Intermediate)",
+            command=lambda: self.start_new_game(Difficulty.INTERMEDIATE),
+        )
         game_menu.add_command(
-            label='New (Advanced)',
-            command=lambda: self.start_new_game(Difficulty.ADVANCED))
+            label="New (Advanced)",
+            command=lambda: self.start_new_game(Difficulty.ADVANCED),
+        )
         game_menu.add_command(
-            label='New (Custom)',
-            command=lambda: self.start_new_game(Difficulty.CUSTOM))
-        menubar.add_cascade(label='Game', menu=game_menu)
+            label="New (Custom)", command=lambda: self.start_new_game(Difficulty.CUSTOM)
+        )
+        menubar.add_cascade(label="Game", menu=game_menu)
 
         # finally add the menubar to the root window
         self.window.config(menu=menubar)
@@ -86,7 +88,7 @@ class GameUI:
         self.ui_elements += [menubar, game_menu]
 
     def start_new_game(self, difficulty: Difficulty) -> None:
-        """ Start a new game with the selected difficulty """
+        """Start a new game with the selected difficulty"""
         if difficulty == Difficulty.EASY:
             self.hex_grid.restart_game(5, 8)
             self.draw_field()
@@ -96,7 +98,7 @@ class GameUI:
         elif difficulty == Difficulty.ADVANCED:
             self.hex_grid.restart_game(13, 80)
             self.draw_field()
-        else: # custom difficulty
+        else:  # custom difficulty
             # This call takes care of restarting the game
             # with selected board size and mine count,
             # and also redraws the Game UI after difficulty
@@ -105,38 +107,38 @@ class GameUI:
 
     @staticmethod
     def border() -> float:
-        """ Return fixed border size (on all sides) """
+        """Return fixed border size (on all sides)"""
         return 20
 
     def draw_field(self) -> None:
-        """ Redraw the game on the Canvas element """
+        """Redraw the game on the Canvas element"""
         HexGridUIUtilities.draw_field(self, self.border())
 
     @staticmethod
     def show_alert(title: str, msg: str) -> None:
-        """ Show a standard alert with a title and a message """
+        """Show a standard alert with a title and a message"""
         messagebox.showinfo(title, msg)
 
-    def on_click(self, event: Any) -> None:
-        """ Primary click event handler """
+    def on_click(self, event) -> None:
+        """Primary click event handler"""
         self.hex_grid.primary_click(
-            (event.x - self.border() - self.hshift,
-             event.y - self.border()),
+            (event.x - self.border() - self.hshift, event.y - self.border()),
             self.apothem,
             self.draw_field,
-            self.show_alert)
+            self.show_alert,
+        )
 
-    def on_secondary_click(self, event: Any) -> None:
-        """ Secondary click event handler """
+    def on_secondary_click(self, event) -> None:
+        """Secondary click event handler"""
         self.hex_grid.secondary_click(
-            (event.x - self.border() - self.hshift,
-             event.y - self.border()),
+            (event.x - self.border() - self.hshift, event.y - self.border()),
             self.apothem,
             self.draw_field,
-            self.show_alert)
+            self.show_alert,
+        )
 
     def on_window_resize(self, _: Event) -> None:
-        """ Handler for window resize. Redraws the board. """
+        """Handler for window resize. Redraws the board."""
         # recalculates apothem and hshift values automatically
         # for the new window size
         self.draw_field()

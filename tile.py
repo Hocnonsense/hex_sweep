@@ -3,7 +3,6 @@ This module contains the Tile class, which described a
 single hexagonal tile.
 """
 
-from typing import Optional, Any
 
 class Tile:
     """
@@ -11,7 +10,8 @@ class Tile:
     As Python does not support access control, any members that
     must not be accessed externally are prefixed with an underscore.
     """
-    def __init__(self, game: Any, x: int, y: int) -> None:
+
+    def __init__(self, game, x: int, y: int) -> None:
         self.game = game
         self.x_coord = x
         self.y_coord = y
@@ -41,8 +41,7 @@ class Tile:
         """
         Returns the number of adjacent mines to this current tile
         """
-        return self.game.adjacent_mine_count(self.x_coord,
-                                             self.y_coord)
+        return self.game.adjacent_mine_count(self.x_coord, self.y_coord)
 
     def has_adjacent_mines(self) -> bool:
         """
@@ -56,15 +55,15 @@ class Tile:
         """
         if self.is_revealed():
             if self.has_mine():
-                return 'red'
+                return "red"
             if self.has_adjacent_mines():
-                return 'orange'
-            return 'lightgreen'
+                return "orange"
+            return "lightgreen"
         if self.has_flag():
-            return 'purple'
-        return 'lightblue'
+            return "purple"
+        return "lightblue"
 
-    def text(self) -> Optional[str]:
+    def text(self):
         """
         Text that should be shown on this tile
         """
@@ -73,7 +72,7 @@ class Tile:
                 return str(self.adjacent_mine_count())
         # otherwise return None, which will prevent
         # any text from being shown on this tile
-        return None
+        return ""
 
     def can_toggle_flag(self) -> bool:
         """
@@ -97,7 +96,7 @@ class Tile:
         self._mine = True
 
     def set_flag(self) -> None:
-        """ If allowed, change this tile to have a flag """
+        """If allowed, change this tile to have a flag"""
         if self.has_flag():
             return
         if not self.can_toggle_flag():
@@ -105,7 +104,7 @@ class Tile:
         self._flag = True
 
     def unset_flag(self) -> None:
-        """ If allowed, change this tile to not have a flag """
+        """If allowed, change this tile to not have a flag"""
         if not self.has_flag():
             return
         if not self.can_toggle_flag():
@@ -125,6 +124,8 @@ class Tile:
         Useful only for debugging: this text is printed to the console
         when you try to print a tile object.
         """
-        return (f'<Tile revealed={self.is_revealed()} '
-                + f'mine={self.has_mine()} '
-                + f'flag={self.has_flag()}>')
+        return (
+            f"<Tile revealed={self.is_revealed()} "
+            + f"mine={self.has_mine()} "
+            + f"flag={self.has_flag()}>"
+        )
