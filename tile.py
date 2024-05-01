@@ -3,6 +3,13 @@ This module contains the Tile class, which described a
 single hexagonal tile.
 """
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    # pylint: disable=import-error, unused-import, missing-docstring
+    # pylint: disable=too-few-public-methods
+    from hexgrid import HexGrid
+
 
 class Tile:
     """
@@ -11,7 +18,7 @@ class Tile:
     must not be accessed externally are prefixed with an underscore.
     """
 
-    def __init__(self, game, x: int, y: int) -> None:
+    def __init__(self, game: "HexGrid", x: int, y: int) -> None:
         self.game = game
         self.x_coord = x
         self.y_coord = y

@@ -20,7 +20,7 @@ class GameUI:
     events to the HexGrid instance.
     """
 
-    def __init__(self, difficulty: Difficulty) -> None:
+    def __init__(self) -> None:
         self.window = Tk()  # create application window
         self.window.title("HexSweeper")
         # default width & height
@@ -41,7 +41,7 @@ class GameUI:
         # HexGridUIUtilities.draw_field
         self.apothem: float = 0
         self.hshift: float = 0
-        self.start_new_game(difficulty)
+        self.start_new_game(Difficulty.EASY)
 
         self.ui_elements: list[Widget] = [self.canvas]
 

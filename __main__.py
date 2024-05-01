@@ -14,5 +14,5 @@ if sys.version_info < (3, 6):
 from game_ui import GameUI
 from difficulty import Difficulty
 
-if __name__ == '__main__':
-    GameUI(Difficulty.EASY)
+if __name__ == "__main__":
+    GameUI()

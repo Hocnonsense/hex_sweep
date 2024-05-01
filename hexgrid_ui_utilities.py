@@ -2,7 +2,7 @@
 """
  * @Date: 2024-04-30 21:00:33
  * @LastEditors: hwrn hwrn.aou@sjtu.edu.cn
- * @LastEditTime: 2024-04-30 21:03:27
+ * @LastEditTime: 2024-04-30 21:29:31
  * @FilePath: /unicellular-unit-with-3-genes/hex_sweep/hexgrid_ui_utilities.py
  * @Description:
 
@@ -118,8 +118,8 @@ class HexGridUIUtilities:
         (field_x, field_y) = game_pos
 
         grid_size = ui_instance.hex_grid.size
-        row_count = ui_instance.hex_grid.row_count()
-        row_cell_count = ui_instance.hex_grid.cell_count_in_row(field_y)
+        row_count = ui_instance.hex_grid.row_count
+        row_cell_count = ui_instance.hex_grid.cell_count_in_row[field_y]
 
         # only hexagons on the far right (x == row_cell_count - 1)
         # need a right-hand-side outline
